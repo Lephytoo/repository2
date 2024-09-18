@@ -75,7 +75,10 @@ def customer_order():
     else:
         print("No items ordered.")
 
+
+
 def update_books():
+    
     
     while True:
         print("\nCurrent Bestselling Books:")
@@ -88,7 +91,7 @@ def update_books():
         
         if action == 'add':
             new_book = input("Enter the title of the book to add: ").strip()
-            if new_book and new_book not in bestselling_books:
+            if new_book not in bestselling_books:
                 bestselling_books.append(new_book)
                 print(f"'{new_book}' has been added to the bestselling books.")
             else:
@@ -115,6 +118,7 @@ def update_books():
         else:
             print("Invalid action. Please choose 'add', 'remove', or 'update'.")
             
+    
     filename = "bestselling_books.json"
     try:
         with open(filename, "w") as file:
@@ -123,80 +127,106 @@ def update_books():
     except IOError:
         print("An error occurred while saving the updated book list.")
 
+def update_menu():
+    while True:
+        print("\nCurrent Menu Items:")
+        print("Food: " + ", ".join(menu_items['food']))
+        print("Drinks: " + ", ".join(menu_items['drinks']))
+        print("Specials: " + ", ".join(menu_items['specials']))
+        
+        action = input("\nWould you like to 'add', 'remove', or 'update' menu items? (type 'done' to finish): ").strip().lower()
+        
+        if action == 'done':
+            break
+        
+        if action == 'add':
+            category = input("Which category would you like to add to? (food, drinks, specials): ").strip().lower()
+            new_item = input("Enter the name of the item to add: ").strip()
+            if category in menu_items:
+                if new_item not in menu_items[category]:
+                    menu_items[category].append(new_item)
+                    print(f"'{new_item}' has been added to the {category} menu.")
+                else:
+                    print("Item already exists in the menu.")
+            else:
+                print("Invalid category.")
+                
+        elif action == 'remove':
+            category = input("Which category would you like to remove from? (food, drinks, specials): ").strip().lower()
+            item_to_remove = input("Enter the name of the item to remove: ").strip()
+            if category in menu_items:
+                if item_to_remove in menu_items[category]:
+                    menu_items[category].remove(item_to_remove)
+                    print(f"'{item_to_remove}' has been removed from the {category} menu.")
+                else:
+                    print("Item not found in the selected category.")
+            else:
+                print("Invalid category.")
+                
+        elif action == 'update':
+            category = input("Which category would you like to update? (food, drinks, specials): ").strip().lower()
+            if category in menu_items:
+                old_item = input("Enter the current name of the item to update: ").strip()
+                if old_item in menu_items[category]:
+                    new_item = input("Enter the new name of the item: ").strip()
+                    index = menu_items[category].index(old_item)
+                    menu_items[category][index] = new_item
+                    print(f"'{old_item}' has been updated to '{new_item}' in the {category} menu.")
+                else:
+                    print("Item not found in the selected category.")
+            else:
+                print("Invalid category.")
+                
+        else:
+            print("Invalid action. Please choose 'add', 'remove', or 'update'.")
+    
+    filename = "menu_items.json"
+    try:
+        with open(filename, "w") as file:
+            json.dump(menu_items, file, indent=4)
+        print(f"\nUpdated menu items saved to {filename}.")
+    except IOError:
+        print("An error occurred while saving the updated menu.")
 
-def view_customers():
-    """View customer details."""
+
+# remaining 
+
+
+def view_customer_details():
+    """Load and display customer details from the file."""
     filename = "customer_data.json"
     try:
         with open(filename, "r") as file:
-            data = json.load(file)
+            customer_data = json.load(file)
             print("\nCustomer Details:")
-            print(json.dumps(data, indent=4))
+            print(json.dumps(customer_data, indent=4))
     except IOError:
-        print(f"An error occurred while reading the file.")
-
-def update_menu():
-    while True:
-        print("\nWhat would you like to update?")
-        print("1. Add a new food item")
-        print("2. Add a new drink item")
-        print("3. Add a new special")
-        print("4. Exit")
-        choice = input("Enter your choice: ")
- 
-        if choice == '1':
-            new_item = input("Enter the new food item: ").strip()
-            menu_items['food'].append(new_item)
-            print(f"{new_item} added to the food menu.")
-        elif choice == '2':
-            new_item = input("Enter the new drink item: ").strip()
-            menu_items['drinks'].append(new_item)
-            print(f"{new_item} added to the drinks menu.")
-        elif choice == '3':
-            new_special = input("Enter the new special item: ").strip()
-            menu_items['specials'].append(new_special)
-            print(f"{new_special} added to today's specials.")
-        elif choice == '4':
-            break
-        else:
-            print("Invalid choice. Try again.")
+        print("An error occurred while reading the customer data file.")
+    except json.JSONDecodeError:
+        print("Error decoding JSON from the customer data file.")
 
 def main():
     while True:
-        print("\nWelcome to the Irish Cafe!")
-        print("1. Customer Menu")
-        print("2. Employee Menu")
-        print("3. Exit")
-        choice = input("Enter your choice: ")
-
+        print("\nMain Menu:")
+        print("1. Place a customer order")
+        print("2. Update bestselling books")
+        print("3. Update menu items")
+        print("4. View customer details")
+        print("5. Exit")
+        choice = input("Enter your choice: ").strip()
+        
         if choice == '1':
             customer_order()
         elif choice == '2':
-            while True:
-                print("\n--- Employee Menu ---")
-                print("1. Update Menu Items")
-                print("2. Update Bestselling Books")
-                print("3. Return to Main Menu")
-                emp_choice = input("Enter your choice: ")
-
-                if emp_choice == '1':
-                    update_menu()
-                elif emp_choice == '2':
-                    update_books()
-                elif emp_choice == '3':
-                    break
-                else:
-                    print("Invalid choice. Try again.")
+            update_books()
         elif choice == '3':
-            print("Goodbye!")
+            update_menu()
+        elif choice == '4':
+            view_customer_details()
+        elif choice == '5':
             break
         else:
-            print("Invalid choice. Try again.")
+            print("Invalid choice. Please try again.")
 
-# Run the program
 if __name__ == "__main__":
-    main()
-
-# update_books()
-# # update_menu()
-# customer_order()
+    main() 

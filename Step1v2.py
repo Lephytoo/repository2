@@ -161,8 +161,42 @@ def update_menu():
         else:
             print("Invalid choice. Try again.")
 
+def main():
+    while True:
+        print("\nWelcome to the Irish Cafe!")
+        print("1. Customer Menu")
+        print("2. Employee Menu")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
 
+        if choice == '1':
+            customer_order()
+        elif choice == '2':
+            while True:
+                print("\n--- Employee Menu ---")
+                print("1. Update Menu Items")
+                print("2. Update Bestselling Books")
+                print("3. Return to Main Menu")
+                emp_choice = input("Enter your choice: ")
 
-update_books()
-# update_menu()
-customer_order()
+                if emp_choice == '1':
+                    update_menu()
+                elif emp_choice == '2':
+                    update_books()
+                elif emp_choice == '3':
+                    break
+                else:
+                    print("Invalid choice. Try again.")
+        elif choice == '3':
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Try again.")
+
+# Run the program
+if __name__ == "__main__":
+    main()
+
+# update_books()
+# # update_menu()
+# customer_order()

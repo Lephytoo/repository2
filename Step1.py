@@ -56,11 +56,10 @@ def customer_order():
         name = input("Enter your name: ").strip()
         address = input("Enter your address for delivery (if ordering books): ").strip()
         customer = Customer(name, address, order)
-    
-        print(f"\nThank you for your order, {name}!")
         customers.append(customer)
+        print(f"\nThank you for your order, {name}!")
     else:
         print("No items ordered.")
 
-print(customer_order())
-print(customers)
+# print(customer_order())
+print(Customers)
